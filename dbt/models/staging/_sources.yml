@@ -1,0 +1,10 @@
+version: 2
+sources:
+  - name: raw
+    schema: raw
+    description: "Yahoo Finance Python ingest, Airbyte Direct Load, optional historical rates"
+    tables:
+      - name: stock_prices
+      - name: trade_log
+      - name: exchange_rates
+      - name: exchange_rate_history

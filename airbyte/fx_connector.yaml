@@ -1,0 +1,42 @@
+# Optional starting template for Airbyte Connector Builder -> YAML editor.
+# UI validation is still required against your installed Airbyte version.
+version: 6.0.0
+type: DeclarativeSource
+check:
+  type: CheckStream
+  stream_names: [exchange_rates]
+streams:
+  - type: DeclarativeStream
+    name: exchange_rates
+    primary_key: [date, base, quote]
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url_base: https://api.frankfurter.dev/v2/
+        path: rate/usd/ngn
+        http_method: GET
+        authenticator:
+          type: NoAuth
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path: []
+      paginator:
+        type: NoPagination
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        additionalProperties: true
+        properties:
+          date: {type: string, format: date}
+          base: {type: string}
+          quote: {type: string}
+          rate: {type: number}
+spec:
+  type: Spec
+  connection_specification:
+    type: object
+    properties: {}

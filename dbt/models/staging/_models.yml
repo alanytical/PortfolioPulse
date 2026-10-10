@@ -1,0 +1,27 @@
+version: 2
+models:
+  - name: stg_stock_prices
+    description: "Yahoo Finance daily close price by trading date and ticker."
+    columns:
+      - name: price_date
+        data_tests: [not_null]
+      - name: ticker
+        data_tests: [not_null]
+      - name: close_usd
+        data_tests: [not_null]
+  - name: stg_trades
+    description: "Typed purchase-only transactions from a simulated Google Sheets trade log."
+    columns:
+      - name: trade_id
+        data_tests: [not_null, unique]
+      - name: ticker
+        data_tests: [not_null]
+      - name: shares_bought
+        data_tests: [not_null]
+  - name: stg_exchange_rates
+    description: "USD to NGN FX observations, including optional historical backfill."
+    columns:
+      - name: rate_date
+        data_tests: [not_null]
+      - name: usd_ngn_rate
+        data_tests: [not_null]

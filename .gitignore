@@ -1,0 +1,38 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.log
+*.json.key
+*service-account*.json
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+.DS_Store
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*service-account*.json
+credentials.json
+secrets/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# dbt generated files
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/models/**/*.bak
+
+# System files
+.DS_Store
+dbt/.user.yml

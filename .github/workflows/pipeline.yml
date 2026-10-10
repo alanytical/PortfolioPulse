@@ -1,0 +1,38 @@
+name: PortfolioPulse daily pipeline
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 23 * * 1-5' # GitHub schedules use UTC; keep host running.
+jobs:
+  daily-pipeline:
+    # REQUIRED: an online self-hosted Linux runner on the SAME machine/network as local Airbyte.
+    runs-on: [self-hosted, Linux, X64]
+    timeout-minutes: 110
+    env:
+      NEON_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+      AIRBYTE_API_URL: http://localhost:8000/api/public/v1
+      AIRBYTE_CLIENT_ID: ${{ secrets.AIRBYTE_CLIENT_ID }}
+      AIRBYTE_CLIENT_SECRET: ${{ secrets.AIRBYTE_CLIENT_SECRET }}
+      AIRBYTE_TRADES_CONNECTION_ID: ${{ secrets.AIRBYTE_TRADES_CONNECTION_ID }}
+      AIRBYTE_FX_CONNECTION_ID: ${{ secrets.AIRBYTE_FX_CONNECTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Refresh prices first (fail on error)
+        run: python scripts/ingest_prices.py --days 110
+      - name: Trigger and WAIT for both Airbyte syncs (fail on error)
+        run: python scripts/run_airbyte.py
+      - name: dbt debug
+        run: python scripts/run_dbt.py debug
+      - name: dbt run
+        run: python scripts/run_dbt.py run
+      - name: dbt test
+        run: python scripts/run_dbt.py test
+      - name: Check table counts
+        run: python scripts/check_data.py

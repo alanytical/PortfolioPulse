@@ -1,0 +1,21 @@
+version: 2
+models:
+  - name: mart_portfolio_value
+    description: "Daily buy-only positions, historical cost basis, unrealized USD gains, and NGN value when historical FX exists."
+    columns:
+      - name: price_date
+        data_tests: [not_null]
+      - name: ticker
+        data_tests: [not_null]
+      - name: shares_held
+        data_tests: [not_null]
+  - name: mart_portfolio_daily
+    description: "Portfolio-wide USD and NGN totals each stock-market trading day."
+    columns:
+      - name: price_date
+        data_tests: [not_null, unique]
+  - name: mart_latest_positions
+    description: "Latest positions with allocation share as percentage."
+    columns:
+      - name: ticker
+        data_tests: [not_null, unique]

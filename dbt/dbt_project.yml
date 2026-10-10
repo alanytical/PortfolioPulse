@@ -1,0 +1,13 @@
+name: portfoliopulse
+version: '1.0.0'
+config-version: 2
+profile: portfoliopulse
+model-paths: ['models']
+test-paths: ['tests']
+models:
+  portfoliopulse:
+    +materialized: view
+    staging:
+      +schema: staging
+    marts:
+      +schema: analytics
